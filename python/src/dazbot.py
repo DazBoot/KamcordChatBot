@@ -15,13 +15,26 @@ class DazBot( object ):
         self.driver = webdriver.Firefox()
         self.driver.get( streamUrl )
         
+        self.authUsers = []
+        self.commands = {}
         
         self.messageLog = []
         self.lastMessageScrape = []     
-        
+    
+    def addAuthorizedUser( self, username ):
+        if username not in self.authUsers:
+            self.authUsers.append( username )
+    
+    def addCommand( self, command, message ):
+        if command not in self.commands.keys():
+            self.commands[ command ] = message
+    
     def parseMessage( self, message ):
         print( message[ USERNAME_INDEX ] + ": " + message[ MESSAGE_INDEX ] )
         self.messageLog.append( message )
+        
+        if message[ MESSAGE_INDEX ] in self.commands.keys() and message[ USERNAME_INDEX ] in self.authUsers:
+            sendMessage( self.driver, self.commands[ message[ MESSAGE_INDEX ] ] )
         
     def findMessageMatchPoint( self, scrapedMessages ):
         #Find find the index to current message match point, start by iterating backwards through the log
@@ -45,13 +58,26 @@ class DazBot( object ):
         for msgIdx in range( matchPos + 1, len( currentMessages ) ):
             self.parseMessage( currentMessages[ msgIdx ] )
     
+    
+    
 if __name__ == "__main__":
+    
+    #Create the bot
     dazBot = DazBot( "https://www.kamcord.com/live/DazBoot/chat" )
+
+    #Add all of the users and commands
+    dazBot.addAuthorizedUser( "Evolution590" )
+    dazBot.addAuthorizedUser( "DazBoot" )
+    
+    dazBot.addCommand( "!test", "This is a test command!" )
+
+    #Connect and login
     time.sleep( 1 ) #Wait 1 second for the page to load before we continue
     sendMessage( dazBot.driver, "Test message from DazBot" )
     time.sleep( 1 ) #Wait 1 second for the login prompt before we continue
     login( dazBot.driver, USERNAME, PASSWORD )
     time.sleep( 1 ) #Wait 1 second for login to complete before we continue
+
     
     while( True ):
         dazBot.checkForMessages()
