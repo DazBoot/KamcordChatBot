@@ -25,8 +25,7 @@ class DazBot( object ):
     def checkForMessages( self ):
         
         #Grab all of the messages from the site
-        currentMessages = getMessages( None )
-        print( currentMessages )
+        currentMessages = getMessages( self.driver )
         
         matchPos = 0
         
