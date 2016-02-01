@@ -13,12 +13,33 @@ def login( driver, username, password ):
     passwordInput = driver.find_elements_by_name( "password" )[ 1 ]
     passwordInput.send_keys( PASSWORD )
     passwordInput.submit()
+
     
 def sendMessage( driver, msg ):
     commentInput = driver.find_element_by_class_name( "live-comment-input" )
     commentInput.send_keys( msg )
     commentInput.submit()
 
+def getMessages( driver ):
+    messageClasses = driver.find_elements_by_class_name( "live-comment" )
+    authorClasses = driver.find_elements_by_class_name( "live-comment--author" )
+    
+    messageList = []
+    
+    ##iterate through all the messages
+    for idx in range(0, len(messageClasses)):
+    
+        ##find the username of the message
+        author = authorClasses[idx].text
+        ## finds the entire contents of live-comment, includes username
+        fullMessage = messageClasses[idx].text
+        ## strip username from the front of the message
+        Message = fullMessage[len(author):]
+        ##append the author message pair to the full message list
+        messageList.append([author, message ])
+
+    return messageList
+    
 if __name__ == "__main__":
     driver = webdriver.Firefox()
     driver.get( "https://www.kamcord.com/live/DazBoot/chat" )
@@ -40,6 +61,7 @@ if __name__ == "__main__":
     
     time.sleep( 1 )
     
+    getMessages(driver)
+    
     #Send a dummy message to trigger the login prompt
     sendMessage( driver, "This is a test message from DazBoot!" )
-    inputElement.submit()
