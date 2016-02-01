@@ -21,35 +21,28 @@ class DazBot( object ):
         
     def parseMessage( self, message ):
         print( message[ USERNAME_INDEX ] + ": " + message[ MESSAGE_INDEX ] )
+        self.messageLog.append( message )
         
+    def findMessageMatchPoint( self, scrapedMessages ):
+        #Find find the index to current message match point, start by iterating backwards through the log
+        for logIdx in range( len( self.messageLog ) - 1, -1, -1 ):
+            
+            #Compare against the messages in the last grab
+            for msgIdx in range( 0, len( scrapedMessages ) ):
+                
+                #If the username and message are the same, we have a tentative match
+                if( compareMessages( self.messageLog[ logIdx ], scrapedMessages[ msgIdx ] ) ):
+                    return msgIdx
+                    
+        return 0
+                    
     def checkForMessages( self ):
         
         #Grab all of the messages from the site
         currentMessages = getMessages( self.driver )
         
-        matchPos = 0
-        
-        newMessages = []
-        
-        #Find find the index to current message match point, start by iterating backwards through the log
-        for logIdx in range( len( self.messageLog ) - 1, -1, -1 ):
-            
-            #Compare against the messages in the last grab
-            for msgIdx in range( 0, len( currentMessages ) ):
-                
-                #If the username and message are the same, we have a tentative match
-                if( compareMessages( self.messageLog[ logIdx ], currentMessages[ msgIdx ] ) ):
-                    matchPos = msgIdx
-                    
-                    #Iterate backwards through the last scrape to confirm
-                    for testMsgIdx in range( msgIdx, -1, -1 ):
-                        logMessage = self.messageLog[ logIdx - ( testMsgIdx - msgIdx ) ]
-                        scrapeMessage = currentMessages[ testMsgIdx ]
-                        if( compareMessages( logMessage, scrapeMessage ) == False ):
-                            matchPos = 0
-                            break
-                            
-        for msgIdx in range( matchPos, len( currentMessages ) ):
+        matchPos = self.findMessageMatchPoint( currentMessages )                            
+        for msgIdx in range( matchPos + 1, len( currentMessages ) ):
             self.parseMessage( currentMessages[ msgIdx ] )
     
 if __name__ == "__main__":
