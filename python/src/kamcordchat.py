@@ -26,6 +26,7 @@ if __name__ == "__main__":
     #Send a dummy message to trigger the login prompt
     sendMessage( driver, "DummyMessage" )
     
+    #TODO: Ideally we would wait for this to be visable instead of using a sleep
     '''
     try:
         WebDriverWait( driver, 10 ).until( EC.presence_of_element_located(( By.XPATH, "//*[@id='username']" )) )
