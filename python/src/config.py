@@ -1,2 +1,2 @@
-USERNAME = "DazBot"
-PASSWORD = "Firered1"
+USERNAME = "username"
+PASSWORD = "password"
