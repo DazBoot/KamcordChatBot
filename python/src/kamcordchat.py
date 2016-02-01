@@ -19,6 +19,9 @@ def sendMessage( driver, msg ):
     commentInput.send_keys( msg )
     commentInput.submit()
 
+def getMessages( driver ):
+    return [ [ "DazBoot", "TestMessage" ], [ "Evolution590", "TestMessage2" ] ]
+    
 if __name__ == "__main__":
     driver = webdriver.Firefox()
     driver.get( "https://www.kamcord.com/live/DazBoot/chat" )
