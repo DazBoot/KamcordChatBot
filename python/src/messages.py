@@ -59,8 +59,12 @@ class MessageManager( object ):
                 #If we do have a match, log the message
                 if checkMessageMatch( testScrapeSection, testLogSection ):
                     for message in curMsgList[0:idx]:
-                        self.addMessageToLog( message )
                         newMessages.append( message )
                     break
-                    
+        
+        #Un invert before we do anything
+        newMessages = newMessages[::-1]
+        for message in newMessages:
+            self.addMessageToLog( message )
+        
         return newMessages

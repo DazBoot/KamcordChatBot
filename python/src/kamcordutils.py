@@ -23,6 +23,7 @@ def sendMessage( driver, msg ):
     commentInput = driver.find_element_by_class_name( "live-comment-input" )
     commentInput.send_keys( msg )
     commentInput.submit()
+    time.sleep( 1 )
 
 def cleanMessage( myMsg ):
     myMsg = myMsg.encode(sys.stdout.encoding, errors='replace')
