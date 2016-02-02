@@ -63,14 +63,17 @@ class DazBot( object ):
 if __name__ == "__main__":
     
     #Create the bot
-    dazBot = DazBot( "https://www.kamcord.com/live/DazBoot/chat" )
+    dazBot = DazBot( "https://www.kamcord.com/live/evolution590/chat" )
 
     #Add all of the users and commands
-    dazBot.addAuthorizedUser( "Evolution590" )
+    dazBot.addAuthorizedUser( "evolution590" )
     dazBot.addAuthorizedUser( "DazBoot" )
+    dazBot.addAuthorizedUser( "Gravithon" )
     
     dazBot.addCommand( "!test", "This is a test command!" )
+    dazBot.addCommand( "!commands", "GET OUT OF HERE!" )
 
+    
     #Connect and login
     time.sleep( 1 ) #Wait 1 second for the page to load before we continue
     sendMessage( dazBot.driver, "Test message from DazBot" )

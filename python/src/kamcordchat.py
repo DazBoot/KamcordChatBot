@@ -28,6 +28,10 @@ def cleanMessage( myMsg ):
     myMsg = myMsg.decode(sys.stdout.encoding)
     return myMsg
     
+def sendHeart ( drive):
+    heartClass = driver.find_element_by_class_name("heart")
+    heartClass.click()
+    
 def getMessages( driver ):
     messageClasses = driver.find_elements_by_class_name( "live-comment" )
     authorClasses = driver.find_elements_by_class_name( "live-comment--author" )
@@ -57,7 +61,7 @@ def getMessages( driver ):
     
 if __name__ == "__main__":
     driver = webdriver.Firefox()
-    driver.get( "https://www.kamcord.com/live/DazBoot/chat" )
+    driver.get( "https://www.kamcord.com/live/evolution590/chat" )
     
     #Send a dummy message to trigger the login prompt
     sendMessage( driver, "DummyMessage" )
@@ -76,6 +80,9 @@ if __name__ == "__main__":
     login( driver, USERNAME, PASSWORD )
     
     time.sleep( 1 )
+    
+    while(True):
+        sendHeart(driver)
     
     print(getMessages(driver))
     
