@@ -1,2 +1,2 @@
-python D:\DazBot\KamcordChatBot\python\src\kamcordchat.py
+python D:\DazBot\python\src\kamcordchat.py
 pause
