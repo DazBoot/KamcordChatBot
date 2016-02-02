@@ -1,6 +1,7 @@
 import time
 from config import *
-from kamcordchat import *
+from kamcordutils import *
+from messages import MessageManager
 
 USERNAME_INDEX = 0
 MESSAGE_INDEX = 1
@@ -15,9 +16,13 @@ class DazBot( object ):
         self.driver = webdriver.Firefox()
         self.driver.get( streamUrl )
         
+        #Give the driver a chance to connect
+        time.sleep( 2 )
+        
         self.authUsers = []
         self.commands = {}
         
+        self.messageManager = MessageManager( getMessages( self.driver ) )
         self.messageLog = []
         self.lastMessageScrape = []     
     
@@ -30,11 +35,8 @@ class DazBot( object ):
             self.commands[ command ] = message
     
     def parseMessage( self, message ):
-        print( message[ USERNAME_INDEX ] + ": " + message[ MESSAGE_INDEX ] )
-        self.messageLog.append( message )
-        
-        if message[ MESSAGE_INDEX ] in self.commands.keys() and message[ USERNAME_INDEX ] in self.authUsers:
-            sendMessage( self.driver, self.commands[ message[ MESSAGE_INDEX ] ] )
+        if message.message in self.commands.keys() and message.username in self.authUsers:
+            sendMessage( self.driver, self.commands[ message.message ] )
         
     def findMessageMatchPoint( self, scrapedMessages ):
         #Find find the index to current message match point, start by iterating backwards through the log
@@ -50,16 +52,11 @@ class DazBot( object ):
         return 0
                     
     def checkForMessages( self ):
+        newMessages = self.messageManager.processMessages( getMessages( self.driver ) )
         
-        #Grab all of the messages from the site
-        currentMessages = getMessages( self.driver )
-        
-        matchPos = self.findMessageMatchPoint( currentMessages )                            
-        for msgIdx in range( matchPos + 1, len( currentMessages ) ):
-            self.parseMessage( currentMessages[ msgIdx ] )
-    
-    
-    
+        for msg in newMessages:
+            self.parseMessage( msg )
+
 if __name__ == "__main__":
     
     #Create the bot

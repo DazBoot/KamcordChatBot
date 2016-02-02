@@ -1,6 +1,7 @@
 
 import time
 import sys
+from messages import Message
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -55,7 +56,7 @@ def getMessages( driver ):
             # strip username from the front of the message
             message = cleanMessage(fullMessage[len(author):])
     
-        messageList.append([author, message ])
+        messageList.append( Message( message, author, "" ) )
 
     return messageList
     
